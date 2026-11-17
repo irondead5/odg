@@ -14,10 +14,15 @@ export const pulseCommand = defineCommand({
       const content = await fs.readFile(manifestPath, 'utf-8');
       const manifest = JSON.parse(content);
 
+      const cov = manifest.summary?.coverage || manifest.coverage || {};
+      const total = cov.total ?? cov.totalPct ?? 0;
+      const diagrams = cov.diagrams ?? cov.diagramsPct ?? 0;
+      const docs = cov.documents ?? cov.documentsPct ?? 0;
+
       console.log(pc.bold('\n📊 ODG PULSE — Estado de Cobertura de Arquitectura:'));
-      console.log(`  🎯 Cobertura Total:    ${pc.cyan(`${manifest.coverage.totalPct}%`)}`);
-      console.log(`  📐 Diagramas Cubiertos: ${pc.magenta(`${manifest.coverage.diagramsPct}%`)}`);
-      console.log(`  📝 Documentos Cubiertos: ${pc.yellow(`${manifest.coverage.documentsPct}%`)}`);
+      console.log(`  🎯 Cobertura Total:     ${pc.cyan(`${total}%`)}`);
+      console.log(`  📐 Diagramas Cubiertos: ${pc.magenta(`${diagrams}%`)}`);
+      console.log(`  📝 Documentos Cubiertos: ${pc.yellow(`${docs}%`)}`);
 
       if (manifest.nextSteps?.length) {
         console.log(pc.bold('\n🚀 Siguientes Pasos Recomendados (Next Steps):'));

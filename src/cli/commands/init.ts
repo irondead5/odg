@@ -174,6 +174,9 @@ export const initCommand = defineCommand({
       'utf-8'
     );
 
+    // Auto-scaffold enabled documents in .odg/human/
+    await autoScaffoldSuite(odgDir, config.documents);
+
     // Install AI CLI integrations
     const s = p.spinner();
     s.start('Instalando slash commands y skills en tus herramientas de IA...');
@@ -190,3 +193,31 @@ export const initCommand = defineCommand({
     p.outro(pc.green('Listo. Escribe /odg en tu CLI o ejecuta "odg radar" para escanear el proyecto.'));
   }
 });
+
+async function autoScaffoldSuite(odgDir: string, docsConfig: Record<string, boolean> = {}) {
+  try {
+    const scaffoldMap: Record<string, { relPath: string; title: string }> = {
+      technical_sow: { relPath: '01-overview/technical-sow.md', title: 'Technical Scope of Work (SOW)' },
+      requirements_srs: { relPath: '02-requirements/requirements-srs.md', title: 'Software Requirements Specification (SRS)' },
+      api_contracts: { relPath: '04-api/api-contracts.md', title: 'API & Contract Catalog' },
+      data_dictionary: { relPath: '05-data/data-dictionary.md', title: 'Database & Data Dictionary' },
+      env_runbook: { relPath: '06-ops/env-runbook.md', title: 'Operational Runbook & Environment Matrix' }
+    };
+
+    for (const [key, item] of Object.entries(scaffoldMap)) {
+      if (docsConfig[key]) {
+        const fullPath = path.join(odgDir, 'human', item.relPath);
+        try {
+          await fs.access(fullPath);
+        } catch {
+          await fs.mkdir(path.dirname(fullPath), { recursive: true });
+          await fs.writeFile(
+            fullPath,
+            `# ${item.title}\n\nDocumento activado en .odg/blueprint.json. Generado automáticamente por Open Docs Gen.\n`,
+            'utf-8'
+          );
+        }
+      }
+    }
+  } catch {}
+}

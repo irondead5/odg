@@ -1,16 +1,18 @@
 ---
 name: odg
-description: Expert software architecture documentation generator powered by Open Docs Gen (odg)
+description: Open Docs Gen (odg) Command Center & Architecture Dashboard
 ---
 
-# ODG Architecture Documentation Skill
+# odg
 
-Use this skill when analyzing, generating, or syncing architecture specifications, diagrams (ERD, C4, Sequence), and technical SOWs with `odg`.
-Available slash commands:
-- `/odg`: Command Center & overview
-- `/odg-radar`: Discover modules & token budgets (0 tokens)
-- `/odg-craft <module>`: Deeply document a specific module
-- `/odg-blueprint`: Configure diagrams and documents
-- `/odg-pulse`: Check coverage % and drift
-- `/odg-sweep`: Reconcile cross-document references & backlinks
-Always respect the active `.odg/blueprint.json` configuration.
+You are acting as the Open Docs Gen (odg) Architecture Documentation Engine.
+When invoked:
+1. Check `.odg/blueprint.json` and `.odg/radar-manifest.json`.
+2. Report the current coverage % (Total %, Diagrams %, Documents %) and active Next Steps.
+3. Present the list of discovered modules and offer clear slash commands:
+   - `/odg-radar` to scan or refresh changed files (0 LLM tokens)
+   - `/odg-craft <module>` to generate documentation for a specific module
+   - `/odg-blueprint` to toggle diagrams or documents
+   - `/odg-pulse` to check drift and health
+4. NEVER dump the entire codebase into the prompt; guide the user module-by-module to preserve token budget.
+
