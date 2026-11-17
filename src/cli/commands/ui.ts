@@ -141,22 +141,11 @@ function generateSpaHtml(): string {
           fontFamily: {
             sans: ['"Plus Jakarta Sans"', 'ui-sans-serif', 'system-ui', 'sans-serif'],
             mono: ['"JetBrains Mono"', 'monospace']
-          },
-          colors: {
-            brand: {
-              50: '#eff6ff',
-              500: '#3b82f6',
-              600: '#2563eb',
-              700: '#1d4ed8',
-              900: '#1e3a8a',
-              950: '#0f172a'
-            }
           }
         }
       }
     }
   </script>
-  <!-- Marked parser with SVG pan zoom & Lucide icons -->
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/svg-pan-zoom@3.6.1/dist/svg-pan-zoom.min.js"></script>
   <script type="module">
@@ -164,15 +153,33 @@ function generateSpaHtml(): string {
     window.mermaid = mermaid;
     mermaid.initialize({
       startOnLoad: false,
-      theme: 'dark',
+      theme: 'base',
       themeVariables: {
-        fontSize: '16px',
+        fontSize: '15px',
         fontFamily: '"Plus Jakarta Sans", sans-serif',
         darkMode: true,
         background: '#0d1322',
-        mainBkg: '#151d30',
-        nodeBorder: '#38bdf8',
-        lineColor: '#60a5fa'
+        mainBkg: '#162035',
+        primaryColor: '#1e293b',
+        primaryTextColor: '#f8fafc',
+        primaryBorderColor: '#38bdf8',
+        lineColor: '#60a5fa',
+        secondaryColor: '#1e293b',
+        tertiaryColor: '#0f172a',
+        textColor: '#f1f5f9',
+        actorBkg: '#1e293b',
+        actorBorder: '#60a5fa',
+        actorTextColor: '#ffffff',
+        actorLineColor: '#93c5fd',
+        signalColor: '#60a5fa',
+        signalTextColor: '#e2e8f0',
+        labelBoxBkgColor: '#1e293b',
+        labelBoxBorderColor: '#38bdf8',
+        labelTextColor: '#f8fafc',
+        loopTextColor: '#e2e8f0',
+        noteBorderColor: '#38bdf8',
+        noteBkgColor: '#1e293b',
+        noteTextColor: '#f8fafc'
       }
     });
   </script>
@@ -224,65 +231,100 @@ function generateSpaHtml(): string {
       padding: 1rem 1.25rem !important;
       font-size: 0.95rem !important;
     }
-    .markdown-body table {
-      width: 100% !important;
-      border-collapse: collapse !important;
-      margin: 1.5rem 0 !important;
-      font-size: 0.95rem !important;
-    }
-    .markdown-body th {
-      background: #111827 !important;
-      color: #94a3b8 !important;
-      padding: 0.75rem 1rem !important;
-      font-weight: 600 !important;
-      text-transform: uppercase !important;
-      font-size: 0.8rem !important;
-      letter-spacing: 0.05em !important;
-    }
-    .markdown-body td {
-      padding: 0.75rem 1rem !important;
-      border-color: #1e293b !important;
-    }
 
-    /* Modern Diagram Cards */
-    .mermaid-wrapper {
+    /* Modern Diagram Cards: Clean clickable card that launches Fullscreen */
+    .mermaid-card {
       position: relative;
-      background: radial-gradient(circle at top left, #131b2e 0%, #090e1a 100%);
+      background: #0d1322;
       border: 1px solid #1e293b;
       border-radius: 1rem;
-      margin: 2rem 0;
+      margin: 2.2rem 0;
       overflow: hidden;
-      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.5);
-      transition: border-color 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+      box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.6);
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .mermaid-wrapper:hover {
-      border-color: #3b82f6;
-      box-shadow: 0 15px 35px -10px rgba(59, 130, 246, 0.15);
+    .mermaid-card:hover {
+      border-color: #38bdf8;
+      box-shadow: 0 15px 35px -5px rgba(56, 189, 248, 0.2);
+      transform: translateY(-2px);
     }
-    .mermaid-header {
+    .mermaid-card:hover .mermaid-overlay {
+      opacity: 1;
+    }
+    .mermaid-card-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.75rem 1.25rem;
-      background: #0f172a;
+      padding: 0.85rem 1.25rem;
+      background: #111827;
       border-bottom: 1px solid #1e293b;
     }
-    .mermaid-viewport {
-      width: 100%;
-      height: 480px;
+    .mermaid-card-body {
+      padding: 2rem 1.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: radial-gradient(circle at 50% 30%, #151e33 0%, #0d1322 100%);
+      overflow: hidden;
+      max-height: 480px;
+    }
+    .mermaid-card-body svg {
+      max-width: 100% !important;
+      height: auto !important;
+      max-height: 420px !important;
+      display: block;
+    }
+
+    /* Hover Overlay with Fullscreen Indicator */
+    .mermaid-overlay {
+      position: absolute;
+      inset: 0;
+      background: rgba(13, 19, 34, 0.6);
+      backdrop-filter: blur(2px);
       display: flex;
       align-items: center;
       justify-content: center;
-      cursor: grab;
-      user-select: none;
+      opacity: 0;
+      transition: opacity 0.2s ease;
+      pointer-events: none;
     }
-    .mermaid-viewport:active {
-      cursor: grabbing;
+
+    /* Force high contrast text on all Mermaid elements */
+    .mermaid svg text {
+      fill: #f8fafc !important;
+      font-weight: 500 !important;
     }
-    .mermaid-viewport svg {
-      width: 100% !important;
-      height: 100% !important;
-      max-width: none !important;
+    .mermaid svg .actor {
+      fill: #1e293b !important;
+      stroke: #60a5fa !important;
+      stroke-width: 2px !important;
+    }
+    .mermaid svg .actor-line {
+      stroke: #60a5fa !important;
+      stroke-dasharray: 4, 4 !important;
+    }
+    .mermaid svg .messageLine0, .mermaid svg .messageLine1 {
+      stroke: #93c5fd !important;
+      stroke-width: 2px !important;
+    }
+    .mermaid svg .messageText {
+      fill: #ffffff !important;
+      font-weight: 600 !important;
+      stroke: none !important;
+    }
+    .mermaid svg .labelBox {
+      fill: #1e293b !important;
+      stroke: #38bdf8 !important;
+    }
+    .mermaid svg .labelText {
+      fill: #ffffff !important;
+    }
+    .mermaid svg .loopText {
+      fill: #f8fafc !important;
+    }
+    .mermaid svg .loopLine {
+      stroke: #38bdf8 !important;
     }
 
     /* Modal Fullscreen */
@@ -314,12 +356,10 @@ function generateSpaHtml(): string {
       </div>
     </div>
 
-    <!-- Center Navigation Search / Hint -->
     <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-400">
-      <span class="text-blue-400">💡 Tip:</span> Haz clic y arrastra sobre cualquier diagrama para hacer Pan & Zoom
+      <span class="text-cyan-400 font-bold">✨ Tip:</span> Haz clic en cualquier diagrama para abrirlo en Fullscreen con Pan & Zoom
     </div>
 
-    <!-- Right Controls -->
     <div class="flex items-center gap-3">
       <div id="coverage-badge" class="px-3.5 py-1.5 rounded-full bg-blue-950/70 border border-blue-700/50 text-blue-300 text-xs font-semibold flex items-center gap-2 shadow-sm">
         <span class="w-2.5 h-2.5 rounded-full bg-blue-400 animate-pulse"></span>
@@ -359,13 +399,12 @@ function generateSpaHtml(): string {
         </ul>
       </div>
 
-      <!-- Quick Command Footer -->
       <div class="pt-4 border-t border-slate-800/80 text-xs text-slate-500 flex flex-col gap-1.5 font-mono">
         <div class="flex items-center gap-1.5 text-slate-400">
           <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
           <span>CLI: /odg-craft &lt;module&gt;</span>
         </div>
-        <div class="text-[11px] text-slate-500">Zero-thought spec engine</div>
+        <div class="text-[11px] text-slate-500">Click en diagrama para Fullscreen</div>
       </div>
     </aside>
 
@@ -374,42 +413,42 @@ function generateSpaHtml(): string {
       <div class="max-w-4xl mx-auto">
         <div id="loading" class="text-center py-28 text-slate-400 text-base font-medium">
           <div class="w-8 h-8 border-2 border-blue-500 border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
-          Cargando arquitectura y diagramas interactivos...
+          Cargando arquitectura...
         </div>
         <article id="doc-content" class="markdown-body hidden"></article>
       </div>
     </main>
   </div>
 
-  <!-- Fullscreen Diagram Zoom Modal -->
-  <div id="zoom-modal" class="fixed inset-0 z-50 bg-[#050811]/95 backdrop-blur-xl hidden flex-col p-6">
+  <!-- Fullscreen Diagram Zoom Modal (ONLY PLACE WITH ACTIVE PAN & ZOOM) -->
+  <div id="zoom-modal" class="fixed inset-0 z-50 bg-[#070b16]/98 backdrop-blur-2xl hidden flex-col p-6">
     <div class="flex items-center justify-between pb-4 border-b border-slate-800">
       <div class="flex items-center gap-3">
-        <span class="w-3 h-3 rounded-full bg-blue-500"></span>
-        <h3 id="modal-title" class="font-bold text-base text-white tracking-wide">Visor de Diagrama en Alta Definición</h3>
+        <span class="w-3 h-3 rounded-full bg-cyan-400 animate-pulse"></span>
+        <h3 id="modal-title" class="font-bold text-base text-white tracking-wide">Visor Interactivo en Pantalla Completa</h3>
+        <span class="text-xs text-slate-400 border border-slate-800 rounded-md px-2 py-0.5 ml-2 font-mono">Usa la rueda o arrastra para explorar</span>
       </div>
       <div class="flex items-center gap-2">
-        <button onclick="modalZoomIn()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition">
+        <button onclick="modalZoomIn()" class="px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition">
           🔍+ Acercar
         </button>
-        <button onclick="modalZoomOut()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition">
+        <button onclick="modalZoomOut()" class="px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition">
           🔍- Alejar
         </button>
-        <button onclick="modalResetZoom()" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition">
-          ↺ Reset
+        <button onclick="modalResetZoom()" class="px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition">
+          ↺ Centrar
         </button>
-        <button onclick="closeModal()" class="px-4 py-1.5 rounded-lg bg-red-600/80 hover:bg-red-500 text-white text-xs font-semibold transition ml-2">
+        <button onclick="closeModal()" class="px-4 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition ml-2 shadow-lg shadow-rose-600/30">
           ✕ Cerrar
         </button>
       </div>
     </div>
-    <div id="modal-body" class="flex-1 w-full h-full overflow-hidden flex items-center justify-center cursor-grab active:cursor-grabbing p-4">
+    <div id="modal-body" class="flex-1 w-full h-full overflow-hidden flex items-center justify-center cursor-grab active:cursor-grabbing p-6">
       <!-- Cloned SVG goes here -->
     </div>
   </div>
 
   <script>
-    let panZoomInstances = [];
     let modalPanZoom = null;
 
     async function init() {
@@ -467,7 +506,7 @@ function generateSpaHtml(): string {
           btn.className = 'w-full text-left px-3.5 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/80 hover:text-white transition flex items-center justify-between text-xs tracking-tight';
           btn.innerHTML = \`
             <span class="flex items-center gap-2 truncate">
-              <span class="text-blue-400">📄</span>
+              <span class="text-cyan-400">📄</span>
               <span class="truncate font-semibold">\${d.name}</span>
             </span>
             <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700/60 uppercase">\${d.category}</span>
@@ -498,12 +537,6 @@ function generateSpaHtml(): string {
       loadingEl.classList.remove('hidden');
       contentEl.classList.add('hidden');
 
-      // Cleanup old pan-zooms
-      panZoomInstances.forEach(pz => {
-        try { pz.destroy(); } catch (_) {}
-      });
-      panZoomInstances = [];
-
       try {
         const res = await fetch('/api/doc/' + encodeURIComponent(docPath));
         const rawMarkdown = await res.text();
@@ -517,22 +550,22 @@ function generateSpaHtml(): string {
             diagramCounter++;
             const diagId = 'mermaid-diag-' + diagramCounter;
             return \`
-              <div class="mermaid-wrapper" id="wrap-\${diagId}">
-                <div class="mermaid-header">
-                  <span class="text-xs font-semibold text-slate-300 flex items-center gap-2">
-                    <span class="w-2 h-2 rounded-full bg-cyan-400"></span> Diagrama Interactivo \${diagramCounter}
+              <div class="mermaid-card" onclick="openModalDiagram('\${diagId}')" title="Haz clic para ver en pantalla completa interactiva">
+                <div class="mermaid-card-header">
+                  <span class="text-xs font-bold text-slate-300 flex items-center gap-2">
+                    <span class="w-2 h-2 rounded-full bg-cyan-400"></span> Diagrama \${diagramCounter}
                   </span>
-                  <div class="flex items-center gap-1.5">
-                    <button onclick="zoomInDiagram('\${diagId}')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono border border-slate-700" title="Acercar">🔍+</button>
-                    <button onclick="zoomOutDiagram('\${diagId}')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono border border-slate-700" title="Alejar">🔍-</button>
-                    <button onclick="resetDiagram('\${diagId}')" class="px-2 py-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-mono border border-slate-700" title="Centrar">↺</button>
-                    <button onclick="openModalDiagram('\${diagId}')" class="px-2.5 py-1 rounded bg-blue-600 hover:bg-blue-500 text-white text-xs font-semibold ml-1 flex items-center gap-1" title="Pantalla Completa">
-                      ⛶ Expandir
-                    </button>
+                  <div class="flex items-center gap-2 text-xs font-medium text-cyan-400 bg-cyan-950/40 border border-cyan-800/40 px-2.5 py-1 rounded-lg">
+                    <span>⛶ Clic para Pantalla Completa</span>
                   </div>
                 </div>
-                <div class="mermaid-viewport" id="viewport-\${diagId}">
+                <div class="mermaid-card-body" id="body-\${diagId}">
                   <pre class="mermaid" id="\${diagId}">\${text}</pre>
+                </div>
+                <div class="mermaid-overlay">
+                  <div class="px-4 py-2 rounded-xl bg-blue-600/90 text-white font-bold text-sm shadow-xl flex items-center gap-2 border border-blue-400/30">
+                    <span>⛶</span> Abrir en Fullscreen Interactivo
+                  </div>
                 </div>
               </div>
             \`;
@@ -546,31 +579,10 @@ function generateSpaHtml(): string {
         loadingEl.classList.add('hidden');
         contentEl.classList.remove('hidden');
 
-        // Render Mermaid Diagrams & Bind svg-pan-zoom
+        // Render Mermaid Diagrams
         if (window.mermaid) {
           await window.mermaid.run({
             nodes: contentEl.querySelectorAll('pre.mermaid')
-          });
-
-          // Initialize Interactive SVG Pan-Zoom on each rendered diagram
-          const wrappers = contentEl.querySelectorAll('.mermaid-wrapper');
-          wrappers.forEach((wrapper) => {
-            const svg = wrapper.querySelector('svg');
-            if (svg) {
-              svg.style.width = '100%';
-              svg.style.height = '100%';
-              const pz = svgPanZoom(svg, {
-                zoomEnabled: true,
-                controlIconsEnabled: false,
-                fit: true,
-                center: true,
-                minZoom: 0.3,
-                maxZoom: 10,
-                zoomScaleSensitivity: 0.25
-              });
-              wrapper._panZoom = pz;
-              panZoomInstances.push(pz);
-            }
           });
         }
       } catch (e) {
@@ -578,27 +590,9 @@ function generateSpaHtml(): string {
       }
     }
 
-    function zoomInDiagram(id) {
-      const wrap = document.getElementById('wrap-' + id);
-      if (wrap && wrap._panZoom) wrap._panZoom.zoomIn();
-    }
-
-    function zoomOutDiagram(id) {
-      const wrap = document.getElementById('wrap-' + id);
-      if (wrap && wrap._panZoom) wrap._panZoom.zoomOut();
-    }
-
-    function resetDiagram(id) {
-      const wrap = document.getElementById('wrap-' + id);
-      if (wrap && wrap._panZoom) {
-        wrap._panZoom.resetZoom();
-        wrap._panZoom.center();
-      }
-    }
-
     function openModalDiagram(id) {
-      const wrap = document.getElementById('wrap-' + id);
-      const svg = wrap ? wrap.querySelector('svg') : null;
+      const card = document.getElementById('body-' + id);
+      const svg = card ? card.querySelector('svg') : null;
       if (!svg) return;
 
       const modal = document.getElementById('zoom-modal');
@@ -609,6 +603,8 @@ function generateSpaHtml(): string {
       cloneSvg.id = 'modal-svg';
       cloneSvg.style.width = '100%';
       cloneSvg.style.height = '100%';
+      cloneSvg.style.maxWidth = 'none';
+      cloneSvg.style.maxHeight = 'none';
       body.appendChild(cloneSvg);
 
       modal.classList.add('active');
@@ -622,8 +618,8 @@ function generateSpaHtml(): string {
         controlIconsEnabled: false,
         fit: true,
         center: true,
-        minZoom: 0.2,
-        maxZoom: 15,
+        minZoom: 0.1,
+        maxZoom: 20,
         zoomScaleSensitivity: 0.25
       });
     }
@@ -656,7 +652,6 @@ function generateSpaHtml(): string {
       document.documentElement.classList.toggle('dark');
     }
 
-    // Escape key closes modal
     window.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') closeModal();
     });
