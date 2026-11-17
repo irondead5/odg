@@ -153,7 +153,7 @@ function generateSpaHtml(): string {
     window.mermaid = mermaid;
     mermaid.initialize({
       startOnLoad: false,
-      theme: 'base',
+      theme: 'dark',
       fontFamily: '"Plus Jakarta Sans", sans-serif',
       fontSize: 14,
       themeVariables: {
@@ -161,28 +161,15 @@ function generateSpaHtml(): string {
         background: '#090e1a',
         mainBkg: '#131b2e',
         nodeBorder: '#38bdf8',
-        lineColor: '#60a5fa',
-        textColor: '#f8fafc',
-        primaryColor: '#172033',
-        primaryTextColor: '#ffffff',
-        primaryBorderColor: '#38bdf8',
-        secondaryColor: '#1e293b',
-        secondaryTextColor: '#ffffff',
-        secondaryBorderColor: '#60a5fa',
-        tertiaryColor: '#0f172a',
-        tertiaryTextColor: '#ffffff',
-        tertiaryBorderColor: '#1e293b',
-        // ERD & Class Colors
-        attributeBackgroundColorOdd: '#131b2e',
-        attributeBackgroundColorEven: '#0f172a',
-        // Sequence Colors
-        actorBkg: '#172033',
+        lineColor: '#38bdf8',
+        textColor: '#ffffff',
         actorBorder: '#38bdf8',
+        actorBkg: '#131b2e',
         actorTextColor: '#ffffff',
-        actorLineColor: '#60a5fa',
+        actorLineColor: '#38bdf8',
         signalColor: '#38bdf8',
         signalTextColor: '#ffffff',
-        labelBoxBkgColor: '#172033',
+        labelBoxBkgColor: '#131b2e',
         labelBoxBorderColor: '#38bdf8',
         labelTextColor: '#ffffff',
         loopTextColor: '#38bdf8'
@@ -238,17 +225,6 @@ function generateSpaHtml(): string {
       font-size: 0.95rem !important;
     }
 
-    /* THE CANONICAL DIAGRAM STYLES (Identical in card preview & in fullscreen) */
-    .odg-diagram-canvas {
-      background-color: #090e1a !important;
-      border-radius: 0.75rem;
-      border: 1px solid #1e293b;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.4);
-    }
-
     /* Card Preview container */
     .mermaid-card {
       position: relative;
@@ -278,10 +254,14 @@ function generateSpaHtml(): string {
       border-bottom: 1px solid #1e293b;
     }
     .mermaid-card-body {
-      padding: 2rem 1.5rem;
+      background: #090e1a !important;
+      padding: 2.5rem 1.5rem;
       min-height: 280px;
       max-height: 520px;
       overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
     }
     .mermaid-card-body svg {
       max-width: 100% !important;
@@ -304,24 +284,28 @@ function generateSpaHtml(): string {
       pointer-events: none;
     }
 
-    /* Modal Fullscreen: Exact same background, colors and border styling */
+    /* Modal Fullscreen: EXACT SAME CANONICAL BG #090e1a */
     #zoom-modal.active {
       display: flex !important;
+    }
+    #modal-viewport-box {
+      background: #090e1a !important;
+      border: 1px solid #1e293b;
+      border-radius: 1rem;
+      box-shadow: inset 0 2px 20px rgba(0, 0, 0, 0.5);
     }
     #modal-body {
       background: #090e1a !important;
       width: 100%;
       height: 100%;
-      border-radius: 0.75rem;
-      border: 1px solid #1e293b;
     }
     #modal-body svg {
       background: transparent !important;
     }
 
-    /* GLOBAL COLOR HARMONIZATION FOR ALL DIAGRAM TYPES (Flowchart, C4, Sequence, ERD) */
+    /* UNIVERSAL GUARANTEE: NEVER BLACK LINES OR TEXT, ALWAYS CYAN & BLUE #38bdf8 / #60a5fa */
+    svg text,
     svg.mermaid text,
-    .mermaid-card-body svg text,
     #modal-body svg text {
       fill: #ffffff !important;
       font-size: 14px !important;
@@ -330,83 +314,109 @@ function generateSpaHtml(): string {
       stroke: none !important;
     }
 
-    /* Nodes & Boxes across all diagrams */
-    svg.mermaid .node rect,
-    svg.mermaid .node circle,
-    svg.mermaid .node polygon,
-    #modal-body svg .node rect,
-    #modal-body svg .node circle,
-    #modal-body svg .node polygon,
-    svg.mermaid rect.actor,
+    /* All Lines: Solid Blue / Cyan */
+    svg line,
+    svg path,
+    svg.mermaid line,
+    svg.mermaid path,
+    #modal-body svg line,
+    #modal-body svg path {
+      stroke: #38bdf8 !important;
+    }
+
+    /* Arrow markers */
+    svg marker path,
+    #modal-body svg marker path {
+      fill: #38bdf8 !important;
+      stroke: #38bdf8 !important;
+    }
+
+    /* Actor Boxes */
+    svg rect.actor,
     #modal-body rect.actor,
-    svg.mermaid .actor > rect,
+    svg .actor > rect,
     #modal-body .actor > rect,
-    svg.mermaid .er.entityBox,
+    svg .node rect,
+    #modal-body .node rect,
+    svg .er.entityBox,
     #modal-body .er.entityBox {
       fill: #131b2e !important;
       stroke: #38bdf8 !important;
       stroke-width: 2px !important;
     }
 
-    /* Flowchart / Sequence / ERD Connecting Lines */
-    svg.mermaid .edgePath path,
-    #modal-body svg .edgePath path,
-    svg.mermaid .messageLine0,
+    /* Actor vertical line (dotted blue) */
+    svg line.actor-line,
+    #modal-body line.actor-line {
+      stroke: #60a5fa !important;
+      stroke-width: 1.5px !important;
+      stroke-dasharray: 4, 4 !important;
+    }
+
+    /* Message Lines in sequence */
+    svg .messageLine0,
     #modal-body .messageLine0,
-    svg.mermaid .messageLine1,
-    #modal-body .messageLine1,
-    svg.mermaid line.actor-line,
-    #modal-body line.actor-line,
-    svg.mermaid .er.relationshipLine,
-    #modal-body .er.relationshipLine {
+    svg .messageLine1,
+    #modal-body .messageLine1 {
       stroke: #38bdf8 !important;
       stroke-width: 2px !important;
     }
 
-    /* Arrow Markers */
-    svg.mermaid marker path,
-    #modal-body svg marker path {
-      fill: #38bdf8 !important;
-      stroke: #38bdf8 !important;
-    }
-
-    /* Text on Sequence Messages and Flowchart Edge Labels */
-    svg.mermaid .messageText,
-    #modal-body .messageText,
-    svg.mermaid .edgeLabel,
-    #modal-body .edgeLabel,
-    svg.mermaid .labelText,
-    #modal-body .labelText {
+    /* Message texts */
+    svg .messageText,
+    #modal-body .messageText {
       fill: #f1f5f9 !important;
-      color: #f1f5f9 !important;
-      background: transparent !important;
       font-weight: 600 !important;
+      font-size: 13px !important;
+      stroke: none !important;
     }
 
-    /* Alt / Loop boxes in Sequence Diagrams */
-    svg.mermaid rect.labelBox,
+    /* Alt / Loop boxes */
+    svg rect.labelBox,
     #modal-body rect.labelBox {
       fill: #131b2e !important;
       stroke: #60a5fa !important;
     }
-    svg.mermaid .loopLine,
+    svg .labelText,
+    #modal-body .labelText {
+      fill: #ffffff !important;
+      font-weight: bold !important;
+    }
+    svg .loopLine,
     #modal-body .loopLine {
       stroke: #60a5fa !important;
       stroke-dasharray: 4, 4 !important;
     }
-    svg.mermaid .loopText,
+    svg .loopText,
     #modal-body .loopText {
       fill: #38bdf8 !important;
     }
 
-    /* ERD Specific Tables */
-    svg.mermaid .er.attributeBoxOdd,
+    /* Flowcharts / C4 */
+    svg .edgePath path,
+    #modal-body svg .edgePath path {
+      stroke: #38bdf8 !important;
+      stroke-width: 2px !important;
+    }
+    svg .edgeLabel,
+    #modal-body svg .edgeLabel {
+      color: #ffffff !important;
+      background: transparent !important;
+    }
+
+    /* ERD Tables */
+    svg .er.attributeBoxOdd,
     #modal-body .er.attributeBoxOdd {
       fill: #131b2e !important;
     }
-    svg.mermaid .er.attributeBoxEven,
+    svg .er.attributeBoxEven,
     #modal-body .er.attributeBoxEven {
       fill: #0c1220 !important;
+    }
+    svg .er.relationshipLine,
+    #modal-body .er.relationshipLine {
+      stroke: #38bdf8 !important;
+      stroke-width: 2px !important;
     }
 
     /* Scrollbars */
@@ -498,12 +508,12 @@ function generateSpaHtml(): string {
   </div>
 
   <!-- Fullscreen Diagram Zoom Modal -->
-  <div id="zoom-modal" class="fixed inset-0 z-50 bg-[#070b16]/98 backdrop-blur-2xl hidden flex-col p-6">
+  <div id="zoom-modal" class="fixed inset-0 z-50 bg-[#080c16]/98 backdrop-blur-2xl hidden flex-col p-6">
     <div class="flex items-center justify-between pb-4 border-b border-slate-800">
       <div class="flex items-center gap-3">
         <span class="w-3 h-3 rounded-full bg-cyan-400 animate-pulse"></span>
         <h3 id="modal-title" class="font-bold text-base text-white tracking-wide">Visor Interactivo en Pantalla Completa</h3>
-        <span class="text-xs text-slate-400 border border-slate-800 rounded-md px-2.5 py-0.5 ml-2 font-mono">Rueda o arrastra para moverte</span>
+        <span class="text-xs text-slate-400 border border-slate-800 rounded-md px-2.5 py-0.5 ml-2 font-mono">Rueda para zoom &bull; Arrastra para mover</span>
       </div>
       <div class="flex items-center gap-2">
         <button onclick="modalZoomIn()" class="px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition">
@@ -520,8 +530,10 @@ function generateSpaHtml(): string {
         </button>
       </div>
     </div>
-    <div id="modal-body" class="flex-1 w-full h-full overflow-hidden flex items-center justify-center cursor-grab active:cursor-grabbing p-6">
-      <!-- Cloned SVG goes here -->
+    <div id="modal-viewport-box" class="flex-1 w-full h-full overflow-hidden flex items-center justify-center cursor-grab active:cursor-grabbing p-6 mt-4">
+      <div id="modal-body" class="w-full h-full flex items-center justify-center">
+        <!-- High contrast SVG with guaranteed blue lines -->
+      </div>
     </div>
   </div>
 
@@ -636,7 +648,7 @@ function generateSpaHtml(): string {
                     <span>⛶ Clic para Pantalla Completa</span>
                   </div>
                 </div>
-                <div class="mermaid-card-body odg-diagram-canvas" id="body-\${diagId}">
+                <div class="mermaid-card-body" id="body-\${diagId}">
                   <pre class="mermaid" id="\${diagId}">\${text}</pre>
                 </div>
                 <div class="mermaid-overlay">
@@ -661,10 +673,68 @@ function generateSpaHtml(): string {
           await window.mermaid.run({
             nodes: contentEl.querySelectorAll('pre.mermaid')
           });
+          // Fix SVG colors immediately after rendering
+          applyGuaranteedBlueLines(contentEl);
         }
       } catch (e) {
         loadingEl.innerText = 'Error al cargar el documento: ' + e.message;
       }
+    }
+
+    function applyGuaranteedBlueLines(rootElement) {
+      if (!rootElement) return;
+      const svgs = (rootElement.tagName && rootElement.tagName.toLowerCase() === 'svg')
+        ? [rootElement]
+        : Array.from(rootElement.querySelectorAll('svg'));
+
+      svgs.forEach(svg => {
+        // 1. Inject high priority SVG style node as the last element
+        let style = svg.querySelector('style.odg-injected-style');
+        if (!style) {
+          style = document.createElementNS('http://www.w3.org/2000/svg', 'style');
+          style.classList.add('odg-injected-style');
+          svg.appendChild(style);
+        }
+        style.textContent = [
+          'line, path, .messageLine0, .messageLine1, .flowchart-link, .edgePath path, .relationshipLine, .transition { stroke: #38bdf8 !important; stroke-width: 2px !important; }',
+          '.actor-line { stroke: #60a5fa !important; stroke-width: 1.5px !important; stroke-dasharray: 4, 4 !important; }',
+          'marker, marker path, .arrowheadPath { fill: #38bdf8 !important; stroke: #38bdf8 !important; }',
+          'text, .messageText, .labelText, .actor text, tspan { fill: #ffffff !important; color: #ffffff !important; stroke: none !important; font-family: "Plus Jakarta Sans", sans-serif !important; font-weight: 600 !important; }',
+          'rect.actor, .actor > rect, .node rect, .er.entityBox { fill: #131b2e !important; stroke: #38bdf8 !important; stroke-width: 2px !important; }',
+          'rect.labelBox { fill: #131b2e !important; stroke: #60a5fa !important; }',
+          '.actor line, .actor circle { stroke: #38bdf8 !important; }'
+        ].join('\n');
+
+        // 2. Direct inline DOM overrides with !important priority
+        const lines = svg.querySelectorAll('line, path, .messageLine0, .messageLine1, .actor-line, .loopLine, .edgePath path');
+        lines.forEach(el => {
+          const isActorLine = el.classList.contains('actor-line');
+          const color = isActorLine ? '#60a5fa' : '#38bdf8';
+          el.setAttribute('stroke', color);
+          el.style.setProperty('stroke', color, 'important');
+          if (isActorLine) {
+            el.setAttribute('stroke-dasharray', '4, 4');
+            el.style.setProperty('stroke-dasharray', '4, 4', 'important');
+          }
+        });
+
+        // 3. Arrow heads & markers
+        const markers = svg.querySelectorAll('marker, marker path, .arrowheadPath');
+        markers.forEach(m => {
+          m.setAttribute('fill', '#38bdf8');
+          m.setAttribute('stroke', '#38bdf8');
+          m.style.setProperty('fill', '#38bdf8', 'important');
+          m.style.setProperty('stroke', '#38bdf8', 'important');
+        });
+
+        // 4. Texts
+        const texts = svg.querySelectorAll('text, tspan');
+        texts.forEach(t => {
+          t.setAttribute('fill', '#ffffff');
+          t.style.setProperty('fill', '#ffffff', 'important');
+          t.style.setProperty('stroke', 'none', 'important');
+        });
+      });
     }
 
     function openModalDiagram(id) {
@@ -682,8 +752,11 @@ function generateSpaHtml(): string {
       cloneSvg.style.height = '100%';
       cloneSvg.style.maxWidth = 'none';
       cloneSvg.style.maxHeight = 'none';
-      body.appendChild(cloneSvg);
+      
+      // Re-apply guaranteed blue styling to clone
+      applyGuaranteedBlueLines(cloneSvg);
 
+      body.appendChild(cloneSvg);
       modal.classList.add('active');
 
       if (modalPanZoom) {
@@ -699,6 +772,9 @@ function generateSpaHtml(): string {
         maxZoom: 20,
         zoomScaleSensitivity: 0.25
       });
+
+      // Post-init assurance
+      applyGuaranteedBlueLines(cloneSvg);
     }
 
     function modalZoomIn() {
