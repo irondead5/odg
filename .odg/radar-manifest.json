@@ -1,0 +1,18 @@
+{
+  "version": "1.0.0",
+  "lastSyncedCommit": "test",
+  "scannedAt": "2026-11-17T06:17:33.567Z",
+  "coverage": {
+    "totalPct": 65,
+    "diagramsPct": 75,
+    "documentsPct": 55
+  },
+  "nextSteps": [
+    {
+      "priority": 1,
+      "action": "odg craft domain/billing",
+      "description": "Documentar billing",
+      "estimatedTokens": 3200
+    }
+  ]
+}

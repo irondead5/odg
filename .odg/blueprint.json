@@ -1,0 +1,47 @@
+{
+  "version": "1.0.0",
+  "preset": "recommended",
+  "aiClis": [
+    "agy",
+    "claude",
+    "github-copilot"
+  ],
+  "knowledgeBase": {
+    "sweepMode": "auto_zero_token",
+    "useAstStubs": true,
+    "dualMarkdownAndUiLinks": true,
+    "linkCategories": {
+      "feature_thread": true,
+      "module_deps": true,
+      "sow_traceability": true,
+      "governance_risks": true
+    }
+  },
+  "hooks": {
+    "gitPostCommit": false,
+    "agyHook": false,
+    "claudeHook": false,
+    "codexHook": false
+  },
+  "diagrams": {
+    "erd": true,
+    "use_cases": true,
+    "c4_context": true,
+    "sequence_flows": true,
+    "state_machines": false,
+    "class_domain": false,
+    "event_flows": false,
+    "infra_topology": false
+  },
+  "documents": {
+    "technical_sow": true,
+    "requirements_srs": true,
+    "module_specs": true,
+    "api_contracts": true,
+    "data_dictionary": true,
+    "env_runbook": true,
+    "inferred_adrs": false,
+    "tech_debt_audit": false,
+    "security_matrix": false
+  }
+}
