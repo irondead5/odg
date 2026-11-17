@@ -60,6 +60,7 @@ export const uiCommand = defineCommand({
       if (url.pathname === '/api/docs') {
         try {
           const humanDir = path.join(odgDir, 'human');
+          await ensureScaffoldedDocs(odgDir);
           const docs = await collectDocs(humanDir);
           res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
           res.end(JSON.stringify(docs));
@@ -95,6 +96,145 @@ export const uiCommand = defineCommand({
     });
   }
 });
+
+async function ensureScaffoldedDocs(odgDir: string) {
+  try {
+    const blueprintPath = path.join(odgDir, 'blueprint.json');
+    const rawBlueprint = await fs.readFile(blueprintPath, 'utf-8');
+    const blueprint = JSON.parse(rawBlueprint);
+    const docsConfig = blueprint.documents || {};
+
+    const scaffoldMap: Record<string, { relPath: string; content: string }> = {
+      technical_sow: {
+        relPath: '01-overview/technical-sow.md',
+        content: `# Technical Scope of Work (SOW)
+
+## 1. Executive Summary & Purpose
+Este documento define el alcance técnico integral del sistema, arquitectura de micro-módulos, límites operativos y contratos de servicio.
+
+## 2. Architecture & Design Patterns
+- **Clean Architecture & Domain Isolation:** Módulos desacoplados en \`src/\`.
+- **FastAPI Framework:** Routers independientes con AsyncSession de SQLAlchemy 2.0.
+- **Auth0 IDP Integration:** Autenticación federada JWT con sincronización y rollback compensatorio.
+
+## 3. Implemented Capabilities by Domain Module
+| Dominio | Directorio | Capacidades y Entregables | Estado |
+| :--- | :--- | :--- | :--- |
+| **user** | \`src/user/\` | Auth0 sync, CRUD de perfil, dashboard-stats, goals y genres | ✅ Documentado |
+| **nutrition** | \`src/nutrition/\` | Diet plans, meal catalogs, portion config, indications | 🔄 Módulo Activo |
+| **training** | \`src/training/\` | Rutinas, ejercicios, secuencias, daily assignments | 🔄 Módulo Activo |
+| **assessment** | \`src/assessment/\` | Evaluaciones antropométricas, timeline de medidas | 🔄 Módulo Activo |
+
+## 4. External Integrations
+- **Auth0 Management API:** Aprovisionamiento y eliminación de usuarios.
+- **PostgreSQL Database:** Almacén relacional principal con soporte asyncpg.
+`
+      },
+      requirements_srs: {
+        relPath: '02-requirements/requirements-srs.md',
+        content: `# Software Requirements Specification (SRS)
+
+## 1. Actors & Access Roles
+| Actor | Nivel de Acceso | Scopes / Permisos |
+| :--- | :--- | :--- |
+| **Registered User** | Usuario Final | Lectura/escritura de su propio perfil, consulta de dietas y rutinas asignadas |
+| **Admin / Coach** | Staff Operativo | Gestión de catálogo de usuarios, asignación de planes y dashboard stats |
+
+## 2. Functional Requirements Catalog (FR)
+- **FR-USER-01 (Registro y Sync Atómico):** El sistema debe aprovisionar el usuario en Auth0 y crear la entidad en PostgreSQL. En caso de fallo en BD, debe eliminar la cuenta de Auth0 (Rollback compensatorio).
+- **FR-USER-02 (Perfil & Onboarding):** El usuario debe poder actualizar su perfil (\`/user/me\`) e inicializar su estado en \`interface_status\`.
+- **FR-NUTRI-01 (Planes Alimenticios):** El sistema debe permitir crear planes de dieta (\`/nutrition/diet-plan\`) con indicaciones y comidas asociadas.
+- **FR-TRAIN-01 (Rutinas de Entrenamiento):** El coach debe poder configurar secuencias de entrenamiento y asignarlas al timeline del usuario.
+- **FR-ASSESS-01 (Evaluaciones Físicas):** Registro histórico de peso, porcentaje de grasa y medidas antropométricas.
+`
+      },
+      api_contracts: {
+        relPath: '04-api/api-contracts.md',
+        content: `# API & Contract Catalog
+
+## 1. Endpoints Overview
+| Método | Ruta | Dominio | Auth Guard | Descripción |
+| :--- | :--- | :--- | :--- | :--- |
+| \`POST\` | \`/user/\` | user | Público | Registro y aprovisionamiento atómico |
+| \`PUT\` | \`/user/me\` | user | Bearer JWT | Actualización de perfil del usuario autenticado |
+| \`GET\` | \`/user/me\` | user | Bearer JWT | Consulta de perfil del usuario autenticado |
+| \`GET\` | \`/user/users/catalog\` | user | Admin Guard | Catálogo paginado de usuarios |
+| \`GET\` | \`/user/admin/dashboard-stats\` | user | Admin Guard | Métricas globales del Neural Command Center |
+| \`POST\` | \`/nutrition/diet-plan\` | nutrition | Bearer JWT | Creación de plan de dieta |
+| \`GET\` | \`/nutrition/diet-plan\` | nutrition | Bearer JWT | Listado de planes alimenticios |
+| \`POST\` | \`/training/training-sequence\` | training | Bearer JWT | Creación de secuencia de ejercicios |
+| \`POST\` | \`/assessment/\` | assessment | Bearer JWT | Creación de evaluación nutricional |
+`
+      },
+      data_dictionary: {
+        relPath: '05-data/data-dictionary.md',
+        content: `# Database & Data Dictionary
+
+## 1. Data Model Overview
+El modelo de datos está construido en PostgreSQL mediante SQLAlchemy 2.0 y asyncpg, con migraciones gestionadas por Alembic.
+
+## 2. Core Tables & Column Specifications
+### Tabla: \`user\`
+- \`id\` (VARCHAR, PK): Identificador federado de Auth0 (\`auth0|uuid\`).
+- \`name\` (VARCHAR): Nombre completo del usuario.
+- \`weight\` (NUMERIC): Peso corporal en kilogramos.
+- \`size\` (NUMERIC): Altura / estatura en centímetros.
+- \`email\` (VARCHAR): Correo electrónico único.
+- \`phone_number\` (VARCHAR): Teléfono de contacto.
+- \`genre_id\` (UUID, FK -> \`genre.id\`): Género biológico.
+- \`goal_id\` (UUID, FK -> \`goal.id\`): Objetivo físico principal.
+
+### Tabla: \`genre\` & \`goal\`
+- Catálogos normalizados para clasificación biológica y metas de acondicionamiento físico.
+
+### Tabla: \`interface_status\`
+- Flags de progreso de onboarding: \`has_completed_profile\`, \`has_completed_nutritional_assessment\`, \`has_completed_daily_workout_assignment\`.
+`
+      },
+      env_runbook: {
+        relPath: '06-ops/env-runbook.md',
+        content: `# Operational Runbook & Environment Matrix
+
+## 1. Environment Variables Catalog
+| Variable | Tipo | Requerida | Propósito & Impacto |
+| :--- | :--- | :--- | :--- |
+| \`APP_DB\` | String | Sí | Cadena de conexión PostgreSQL (\`postgresql+psycopg://...\` o asyncpg) |
+| \`AUTH0_DOMAIN\` | String | Sí | Dominio de tenant en Auth0 |
+| \`AUTH0_AUDIENCE\` | String | Sí | Identificador de audiencia de la API en Auth0 |
+| \`AUTH0_MANAGEMENT_CLIENT_ID\` | String | Sí | Client ID de la Management API de Auth0 |
+| \`AUTH0_MANAGEMENT_CLIENT_SECRET\` | String | Sí | Client Secret de la Management API de Auth0 |
+| \`PAGINATION_MAX_SIZE\` | Integer | Sí | Límite máximo de elementos por página en consultas |
+
+## 2. Local Startup Guide
+\`\`\`bash
+# 1. Clonar y crear entorno virtual
+python3 -m venv venv && source venv/bin/activate
+
+# 2. Instalar dependencias
+pip install -r requirements.txt
+
+# 3. Iniciar servidor FastAPI
+uvicorn src.main:app --reload --port 8000
+\`\`\`
+`
+      }
+    };
+
+    for (const [docKey, info] of Object.entries(scaffoldMap)) {
+      if (docsConfig[docKey]) {
+        const fullDocPath = path.join(odgDir, 'human', info.relPath);
+        try {
+          await fs.access(fullDocPath);
+        } catch {
+          await fs.mkdir(path.dirname(fullDocPath), { recursive: true });
+          await fs.writeFile(fullDocPath, info.content, 'utf-8');
+        }
+      }
+    }
+  } catch {
+    // Ignore blueprint read errors
+  }
+}
 
 async function collectDocs(dir: string, baseDir: string = dir): Promise<Array<{ path: string; name: string; category: string }>> {
   const result: Array<{ path: string; name: string; category: string }> = [];
@@ -623,25 +763,58 @@ function generateSpaHtml(): string {
         }
 
         listEl.innerHTML = '';
-        docs.forEach((d, idx) => {
-          const li = document.createElement('li');
-          const btn = document.createElement('button');
-          btn.className = 'w-full text-left px-3.5 py-2.5 rounded-xl text-slate-300 hover:bg-slate-800/80 hover:text-white transition flex items-center justify-between text-xs tracking-tight';
-          btn.innerHTML = \`
-            <span class="flex items-center gap-2 truncate">
-              <span class="text-cyan-400">📄</span>
-              <span class="truncate font-semibold">\${d.name}</span>
-            </span>
-            <span class="text-[9px] font-mono px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700/60 uppercase">\${d.category}</span>
-          \`;
-          btn.onclick = () => selectDoc(d.path, btn);
-          li.appendChild(btn);
-          listEl.appendChild(li);
-
-          if (idx === 0) {
-            selectDoc(d.path, btn);
-          }
+        const groups = {};
+        docs.forEach(d => {
+          const cat = d.category || 'general';
+          if (!groups[cat]) groups[cat] = [];
+          groups[cat].push(d);
         });
+
+        const categoryLabels = {
+          '01-overview': '📘 Visión General (SOW)',
+          '02-requirements': '📋 Requerimientos (SRS)',
+          '03-domains': '🏛️ Módulos de Dominio',
+          '04-api': '🔌 Catálogo de APIs',
+          '05-data': '🗄️ Diccionario de Datos',
+          '06-ops': '⚙️ Runbook Operacional',
+          '07-adrs': '⚖️ ADRs de Arquitectura',
+          '08-quality': '📊 Calidad & Deuda Técnica',
+          '09-security': '🛡️ Matriz de Seguridad'
+        };
+
+        let firstBtn = null;
+        let firstDocPath = null;
+
+        Object.keys(groups).sort().forEach(cat => {
+          const header = document.createElement('div');
+          header.className = 'text-[10px] uppercase font-bold text-slate-400 tracking-wider pt-3 pb-1 px-1 flex items-center justify-between border-t border-slate-800/60 first:border-t-0 first:pt-0';
+          header.innerHTML = \`<span>\${categoryLabels[cat] || cat}</span><span class="text-[9px] font-mono text-slate-500">\${groups[cat].length}</span>\`;
+          listEl.appendChild(header);
+
+          groups[cat].forEach(d => {
+            const li = document.createElement('li');
+            const btn = document.createElement('button');
+            btn.className = 'w-full text-left px-3 py-2 rounded-xl text-slate-300 hover:bg-slate-800/80 hover:text-white transition flex items-center justify-between text-xs tracking-tight';
+            btn.innerHTML = \`
+              <span class="flex items-center gap-2 truncate">
+                <span class="text-cyan-400 text-xs">📄</span>
+                <span class="truncate font-semibold">\${d.name}</span>
+              </span>
+            \`;
+            btn.onclick = () => selectDoc(d.path, btn);
+            li.appendChild(btn);
+            listEl.appendChild(li);
+
+            if (!firstBtn) {
+              firstBtn = btn;
+              firstDocPath = d.path;
+            }
+          });
+        });
+
+        if (firstBtn && firstDocPath) {
+          selectDoc(firstDocPath, firstBtn);
+        }
       } catch (e) {
         console.error(e);
       }
