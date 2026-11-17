@@ -304,43 +304,95 @@ function generateSpaHtml(): string {
     }
 
     /* UNIVERSAL GUARANTEE: NEVER BLACK LINES OR TEXT, ALWAYS CYAN & BLUE #38bdf8 / #60a5fa */
+    /* 1. Text contrast halo: 4.5px dark halo behind every letter so lines/shapes never cut through text */
     svg text,
     svg.mermaid text,
-    #modal-body svg text {
+    #modal-body svg text,
+    svg text tspan,
+    #modal-body svg text tspan,
+    .messageText,
+    .labelText,
+    .edgeLabel {
       fill: #ffffff !important;
       font-size: 14px !important;
       font-weight: 600 !important;
       font-family: 'Plus Jakarta Sans', sans-serif !important;
-      stroke: none !important;
+      paint-order: stroke fill !important;
+      stroke: #090e1a !important;
+      stroke-width: 4.5px !important;
+      stroke-linejoin: round !important;
+      stroke-linecap: round !important;
     }
 
-    /* All Lines: Solid Blue / Cyan */
+    /* 2. Specific Line Elements (Never blanket 'path' to avoid distorting shapes/markers) */
+    svg .edgePath .path,
+    #modal-body svg .edgePath .path,
+    svg .flowchart-link,
+    #modal-body svg .flowchart-link,
+    svg .messageLine0,
+    svg .messageLine1,
+    #modal-body svg .messageLine0,
+    #modal-body svg .messageLine1,
+    svg .er.relationshipLine,
+    #modal-body svg .er.relationshipLine,
+    svg .relationshipLine,
+    #modal-body svg .relationshipLine,
     svg line,
-    svg path,
-    svg.mermaid line,
-    svg.mermaid path,
-    #modal-body svg line,
-    #modal-body svg path {
+    #modal-body svg line {
       stroke: #38bdf8 !important;
+      stroke-width: 2px !important;
     }
 
     /* Arrow markers */
     svg marker path,
-    #modal-body svg marker path {
+    #modal-body svg marker path,
+    svg .arrowheadPath,
+    #modal-body svg .arrowheadPath {
       fill: #38bdf8 !important;
       stroke: #38bdf8 !important;
     }
 
-    /* Actor Boxes */
+    /* All Nodes & Shapes (Rectangles, Circles, Polygons, Actors) */
+    svg .node rect,
+    #modal-body svg .node rect,
+    svg .node circle,
+    #modal-body svg .node circle,
+    svg .node polygon,
+    #modal-body svg .node polygon,
     svg rect.actor,
     #modal-body rect.actor,
     svg .actor > rect,
     #modal-body .actor > rect,
-    svg .node rect,
-    #modal-body .node rect,
     svg .er.entityBox,
     #modal-body .er.entityBox {
       fill: #131b2e !important;
+      stroke: #38bdf8 !important;
+      stroke-width: 2px !important;
+    }
+
+    /* Subgraphs / Domain Clusters */
+    svg .cluster rect,
+    #modal-body svg .cluster rect {
+      fill: #0f172a !important;
+      stroke: #38bdf8 !important;
+      stroke-width: 1.5px !important;
+      fill-opacity: 0.8 !important;
+    }
+    svg .cluster text,
+    #modal-body svg .cluster text,
+    svg .cluster span,
+    #modal-body svg .cluster span {
+      fill: #93c5fd !important;
+      color: #93c5fd !important;
+      font-weight: 700 !important;
+    }
+
+    /* ERD Cardinality Circles (Hollow circle matching canvas background with blue border) */
+    svg .er circle,
+    #modal-body svg .er circle,
+    svg [class*="relationship"] circle,
+    #modal-body svg [class*="relationship"] circle {
+      fill: #090e1a !important;
       stroke: #38bdf8 !important;
       stroke-width: 2px !important;
     }
@@ -353,34 +405,11 @@ function generateSpaHtml(): string {
       stroke-dasharray: 4, 4 !important;
     }
 
-    /* Message Lines in sequence */
-    svg .messageLine0,
-    #modal-body .messageLine0,
-    svg .messageLine1,
-    #modal-body .messageLine1 {
-      stroke: #38bdf8 !important;
-      stroke-width: 2px !important;
-    }
-
-    /* Message texts */
-    svg .messageText,
-    #modal-body .messageText {
-      fill: #f1f5f9 !important;
-      font-weight: 600 !important;
-      font-size: 13px !important;
-      stroke: none !important;
-    }
-
     /* Alt / Loop boxes */
     svg rect.labelBox,
     #modal-body rect.labelBox {
       fill: #131b2e !important;
       stroke: #60a5fa !important;
-    }
-    svg .labelText,
-    #modal-body .labelText {
-      fill: #ffffff !important;
-      font-weight: bold !important;
     }
     svg .loopLine,
     #modal-body .loopLine {
@@ -392,16 +421,21 @@ function generateSpaHtml(): string {
       fill: #38bdf8 !important;
     }
 
-    /* Flowcharts / C4 */
-    svg .edgePath path,
-    #modal-body svg .edgePath path {
-      stroke: #38bdf8 !important;
-      stroke-width: 2px !important;
-    }
+    /* Edge Labels & Pills */
     svg .edgeLabel,
-    #modal-body svg .edgeLabel {
+    #modal-body svg .edgeLabel,
+    svg .edgeLabel span,
+    #modal-body svg .edgeLabel span,
+    svg .edgeLabel p,
+    #modal-body svg .edgeLabel p,
+    svg .relationshipLabel,
+    #modal-body svg .relationshipLabel {
       color: #ffffff !important;
-      background: transparent !important;
+      background-color: #090e1a !important;
+      background: #090e1a !important;
+      padding: 2px 6px !important;
+      border-radius: 4px !important;
+      border: 1px solid #1e293b !important;
     }
 
     /* ERD Tables */
@@ -696,19 +730,22 @@ function generateSpaHtml(): string {
           svg.appendChild(style);
         }
         style.textContent = [
-          'line, path, .messageLine0, .messageLine1, .flowchart-link, .edgePath path, .relationshipLine, .transition { stroke: #38bdf8 !important; stroke-width: 2px !important; }',
-          '.actor-line { stroke: #60a5fa !important; stroke-width: 1.5px !important; stroke-dasharray: 4, 4 !important; }',
-          'marker, marker path, .arrowheadPath { fill: #38bdf8 !important; stroke: #38bdf8 !important; }',
-          'text, .messageText, .labelText, .actor text, tspan { fill: #ffffff !important; color: #ffffff !important; stroke: none !important; font-family: "Plus Jakarta Sans", sans-serif !important; font-weight: 600 !important; }',
-          'rect.actor, .actor > rect, .node rect, .er.entityBox { fill: #131b2e !important; stroke: #38bdf8 !important; stroke-width: 2px !important; }',
+          '.edgePath .path, .flowchart-link, .messageLine0, .messageLine1, .relationshipLine, .er.relationshipLine, .transition, line { stroke: #38bdf8 !important; stroke-width: 2px !important; }',
+          '.actor-line, .loopLine { stroke: #60a5fa !important; stroke-width: 1.5px !important; stroke-dasharray: 4, 4 !important; }',
+          'marker path, .arrowheadPath { fill: #38bdf8 !important; stroke: #38bdf8 !important; }',
+          'text, .messageText, .labelText, .actor text, tspan { fill: #ffffff !important; color: #ffffff !important; paint-order: stroke fill !important; stroke: #090e1a !important; stroke-width: 4.5px !important; stroke-linejoin: round !important; stroke-linecap: round !important; font-family: "Plus Jakarta Sans", sans-serif !important; font-weight: 600 !important; }',
+          '.node rect, .node circle, .node polygon, rect.actor, .actor > rect, .er.entityBox { fill: #131b2e !important; stroke: #38bdf8 !important; stroke-width: 2px !important; }',
+          '.cluster rect { fill: #0f172a !important; stroke: #38bdf8 !important; stroke-width: 1.5px !important; fill-opacity: 0.8 !important; }',
+          '.cluster text, .cluster span { fill: #93c5fd !important; color: #93c5fd !important; font-weight: 700 !important; }',
+          '.er circle, [class*="relationship"] circle { fill: #090e1a !important; stroke: #38bdf8 !important; stroke-width: 2px !important; }',
           'rect.labelBox { fill: #131b2e !important; stroke: #60a5fa !important; }',
           '.actor line, .actor circle { stroke: #38bdf8 !important; }'
         ].join('');
 
-        // 2. Direct inline DOM overrides with !important priority
-        const lines = svg.querySelectorAll('line, path, .messageLine0, .messageLine1, .actor-line, .loopLine, .edgePath path');
+        // 2. Specific Lines (never blanket path to avoid breaking shapes)
+        const lines = svg.querySelectorAll('.messageLine0, .messageLine1, line.actor-line, .loopLine, .edgePath .path, .flowchart-link, .er.relationshipLine, .relationshipLine, line');
         lines.forEach(el => {
-          const isActorLine = el.classList.contains('actor-line');
+          const isActorLine = el.classList.contains('actor-line') || el.classList.contains('loopLine');
           const color = isActorLine ? '#60a5fa' : '#38bdf8';
           el.setAttribute('stroke', color);
           el.style.setProperty('stroke', color, 'important');
@@ -719,7 +756,7 @@ function generateSpaHtml(): string {
         });
 
         // 3. Arrow heads & markers
-        const markers = svg.querySelectorAll('marker, marker path, .arrowheadPath');
+        const markers = svg.querySelectorAll('marker path, .arrowheadPath, marker polygon');
         markers.forEach(m => {
           m.setAttribute('fill', '#38bdf8');
           m.setAttribute('stroke', '#38bdf8');
@@ -727,12 +764,65 @@ function generateSpaHtml(): string {
           m.style.setProperty('stroke', '#38bdf8', 'important');
         });
 
-        // 4. Texts
+        // 4. Nodes of all shapes (Rectangles, Circles, Polygons, Actors)
+        const nodes = svg.querySelectorAll('.node rect, .node circle, .node polygon, rect.actor, .actor > rect, .er.entityBox');
+        nodes.forEach(el => {
+          el.setAttribute('fill', '#131b2e');
+          el.setAttribute('stroke', '#38bdf8');
+          el.style.setProperty('fill', '#131b2e', 'important');
+          el.style.setProperty('stroke', '#38bdf8', 'important');
+          el.style.setProperty('stroke-width', '2px', 'important');
+        });
+
+        // 5. Clusters / Subgraphs
+        const clusters = svg.querySelectorAll('.cluster rect');
+        clusters.forEach(el => {
+          el.setAttribute('fill', '#0f172a');
+          el.setAttribute('stroke', '#38bdf8');
+          el.style.setProperty('fill', '#0f172a', 'important');
+          el.style.setProperty('stroke', '#38bdf8', 'important');
+          el.style.setProperty('stroke-width', '1.5px', 'important');
+          el.style.setProperty('fill-opacity', '0.8', 'important');
+        });
+
+        // 6. ERD Cardinality Circles (Hollow circle with dark canvas fill and cyan stroke)
+        const erdCircles = svg.querySelectorAll('.er circle, [class*="relationship"] circle');
+        erdCircles.forEach(el => {
+          el.setAttribute('fill', '#090e1a');
+          el.setAttribute('stroke', '#38bdf8');
+          el.style.setProperty('fill', '#090e1a', 'important');
+          el.style.setProperty('stroke', '#38bdf8', 'important');
+          el.style.setProperty('stroke-width', '2px', 'important');
+        });
+
+        // 7. Universal Text Visibility: 4.5px halo shield around glyphs
         const texts = svg.querySelectorAll('text, tspan');
         texts.forEach(t => {
           t.setAttribute('fill', '#ffffff');
           t.style.setProperty('fill', '#ffffff', 'important');
-          t.style.setProperty('stroke', 'none', 'important');
+          t.style.setProperty('paint-order', 'stroke fill', 'important');
+          t.style.setProperty('stroke', '#090e1a', 'important');
+          t.style.setProperty('stroke-width', '4.5px', 'important');
+          t.style.setProperty('stroke-linejoin', 'round', 'important');
+          t.style.setProperty('stroke-linecap', 'round', 'important');
+          t.style.setProperty('font-family', '"Plus Jakarta Sans", sans-serif', 'important');
+          t.style.setProperty('font-weight', '600', 'important');
+        });
+
+        // 8. Edge label pill backgrounds
+        const edgeLabels = svg.querySelectorAll('.edgeLabel, .relationshipLabel');
+        edgeLabels.forEach(lbl => {
+          lbl.style.setProperty('background-color', '#090e1a', 'important');
+          lbl.style.setProperty('background', '#090e1a', 'important');
+          lbl.style.setProperty('padding', '2px 6px', 'important');
+          lbl.style.setProperty('border-radius', '4px', 'important');
+        });
+
+        // 9. Re-order DOM: Ensure all text and label groups are rendered ON TOP of all lines, markers, and shapes
+        svg.querySelectorAll('.edgeLabels, .edgeLabel, text, .messageText, .labelText').forEach(el => {
+          if (el.parentNode && el.parentNode.lastElementChild !== el) {
+            el.parentNode.appendChild(el);
+          }
         });
       });
     }
@@ -747,14 +837,11 @@ function generateSpaHtml(): string {
       body.innerHTML = '';
 
       const cloneSvg = svg.cloneNode(true);
-      cloneSvg.id = 'modal-svg';
+      // PRESERVE the SVG ID so all of Mermaid's scoped styles continue to apply 100% identically!
       cloneSvg.style.width = '100%';
       cloneSvg.style.height = '100%';
       cloneSvg.style.maxWidth = 'none';
       cloneSvg.style.maxHeight = 'none';
-      
-      // Re-apply guaranteed blue styling to clone
-      applyGuaranteedBlueLines(cloneSvg);
 
       body.appendChild(cloneSvg);
       modal.classList.add('active');
