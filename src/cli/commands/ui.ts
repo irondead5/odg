@@ -703,7 +703,7 @@ function generateSpaHtml(): string {
           'rect.actor, .actor > rect, .node rect, .er.entityBox { fill: #131b2e !important; stroke: #38bdf8 !important; stroke-width: 2px !important; }',
           'rect.labelBox { fill: #131b2e !important; stroke: #60a5fa !important; }',
           '.actor line, .actor circle { stroke: #38bdf8 !important; }'
-        ].join('\n');
+        ].join('');
 
         // 2. Direct inline DOM overrides with !important priority
         const lines = svg.querySelectorAll('line, path, .messageLine0, .messageLine1, .actor-line, .loopLine, .edgePath path');
