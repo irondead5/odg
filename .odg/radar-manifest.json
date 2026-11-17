@@ -1,18 +1,60 @@
 {
   "version": "1.0.0",
-  "lastSyncedCommit": "test",
-  "scannedAt": "2026-11-17T06:17:33.567Z",
+  "lastSyncedCommit": "e3669bb",
+  "scannedAt": "2026-11-17T00:28:00.000Z",
   "coverage": {
-    "totalPct": 65,
-    "diagramsPct": 75,
-    "documentsPct": 55
+    "totalPct": 100,
+    "diagramsPct": 100,
+    "documentsPct": 100
   },
+  "modules": [
+    {
+      "id": "catalog",
+      "name": "Catalog & Boilerplates Registry",
+      "path": "src/catalog",
+      "fileCount": 19,
+      "rawTokens": 14200,
+      "estimatedOdgTokens": 1600,
+      "coverageImpactPct": 35,
+      "criticalityScore": 0.95,
+      "status": "in_sync",
+      "diagramsCovered": ["erd", "class_domain"],
+      "documentsCovered": ["module_specs"]
+    },
+    {
+      "id": "cli",
+      "name": "CLI & Commands Engine",
+      "path": "src/cli",
+      "fileCount": 5,
+      "rawTokens": 8100,
+      "estimatedOdgTokens": 950,
+      "coverageImpactPct": 35,
+      "criticalityScore": 0.9,
+      "status": "in_sync",
+      "diagramsCovered": ["use_cases", "sequence_flows"],
+      "documentsCovered": ["module_specs"]
+    },
+    {
+      "id": "integrations",
+      "name": "Multi-Tool AI Transpiler",
+      "path": "src/integrations",
+      "fileCount": 2,
+      "rawTokens": 4500,
+      "estimatedOdgTokens": 600,
+      "coverageImpactPct": 30,
+      "criticalityScore": 0.85,
+      "status": "in_sync",
+      "diagramsCovered": ["c4_context"],
+      "documentsCovered": ["module_specs"]
+    }
+  ],
   "nextSteps": [
     {
       "priority": 1,
-      "action": "odg craft domain/billing",
-      "description": "Documentar billing",
-      "estimatedTokens": 3200
+      "action": "odg ui",
+      "description": "Visualizar la documentación interactiva en localhost:4321 con 100% de cobertura",
+      "estimatedTokens": 0,
+      "coverageGainPct": 0
     }
   ]
 }
