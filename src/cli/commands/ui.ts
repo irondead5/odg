@@ -153,33 +153,15 @@ function generateSpaHtml(): string {
     window.mermaid = mermaid;
     mermaid.initialize({
       startOnLoad: false,
-      theme: 'base',
-      themeVariables: {
-        fontSize: '15px',
-        fontFamily: '"Plus Jakarta Sans", sans-serif',
-        darkMode: true,
-        background: '#0d1322',
-        mainBkg: '#162035',
-        primaryColor: '#1e293b',
-        primaryTextColor: '#f8fafc',
-        primaryBorderColor: '#38bdf8',
-        lineColor: '#60a5fa',
-        secondaryColor: '#1e293b',
-        tertiaryColor: '#0f172a',
-        textColor: '#f1f5f9',
-        actorBkg: '#1e293b',
-        actorBorder: '#60a5fa',
-        actorTextColor: '#ffffff',
-        actorLineColor: '#93c5fd',
-        signalColor: '#60a5fa',
-        signalTextColor: '#e2e8f0',
-        labelBoxBkgColor: '#1e293b',
-        labelBoxBorderColor: '#38bdf8',
-        labelTextColor: '#f8fafc',
-        loopTextColor: '#e2e8f0',
-        noteBorderColor: '#38bdf8',
-        noteBkgColor: '#1e293b',
-        noteTextColor: '#f8fafc'
+      theme: 'neutral',
+      fontFamily: '"Plus Jakarta Sans", sans-serif',
+      fontSize: 14,
+      sequence: {
+        useMaxWidth: false,
+        showSequenceNumbers: true,
+        actorFontSize: 14,
+        noteFontSize: 13,
+        messageFontSize: 13
       }
     });
   </script>
@@ -232,10 +214,10 @@ function generateSpaHtml(): string {
       font-size: 0.95rem !important;
     }
 
-    /* Modern Diagram Cards: Clean clickable card that launches Fullscreen */
+    /* Diagram Card: Preview */
     .mermaid-card {
       position: relative;
-      background: #0d1322;
+      background: #0f1629;
       border: 1px solid #1e293b;
       border-radius: 1rem;
       margin: 2.2rem 0;
@@ -246,7 +228,7 @@ function generateSpaHtml(): string {
     }
     .mermaid-card:hover {
       border-color: #38bdf8;
-      box-shadow: 0 15px 35px -5px rgba(56, 189, 248, 0.2);
+      box-shadow: 0 15px 35px -5px rgba(56, 189, 248, 0.25);
       transform: translateY(-2px);
     }
     .mermaid-card:hover .mermaid-overlay {
@@ -257,15 +239,15 @@ function generateSpaHtml(): string {
       align-items: center;
       justify-content: space-between;
       padding: 0.85rem 1.25rem;
-      background: #111827;
+      background: #131b2e;
       border-bottom: 1px solid #1e293b;
     }
     .mermaid-card-body {
-      padding: 2rem 1.5rem;
+      padding: 2.5rem 1.5rem;
       display: flex;
       justify-content: center;
       align-items: center;
-      background: radial-gradient(circle at 50% 30%, #151e33 0%, #0d1322 100%);
+      background: #0d1424;
       overflow: hidden;
       max-height: 480px;
     }
@@ -274,13 +256,13 @@ function generateSpaHtml(): string {
       height: auto !important;
       max-height: 420px !important;
       display: block;
+      background: transparent !important;
     }
 
-    /* Hover Overlay with Fullscreen Indicator */
     .mermaid-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(13, 19, 34, 0.6);
+      background: rgba(13, 20, 36, 0.65);
       backdrop-filter: blur(2px);
       display: flex;
       align-items: center;
@@ -290,46 +272,90 @@ function generateSpaHtml(): string {
       pointer-events: none;
     }
 
-    /* Force high contrast text on all Mermaid elements */
-    .mermaid svg text {
-      fill: #f8fafc !important;
-      font-weight: 500 !important;
-    }
-    .mermaid svg .actor {
-      fill: #1e293b !important;
-      stroke: #60a5fa !important;
-      stroke-width: 2px !important;
-    }
-    .mermaid svg .actor-line {
-      stroke: #60a5fa !important;
-      stroke-dasharray: 4, 4 !important;
-    }
-    .mermaid svg .messageLine0, .mermaid svg .messageLine1 {
-      stroke: #93c5fd !important;
-      stroke-width: 2px !important;
-    }
-    .mermaid svg .messageText {
-      fill: #ffffff !important;
-      font-weight: 600 !important;
-      stroke: none !important;
-    }
-    .mermaid svg .labelBox {
-      fill: #1e293b !important;
-      stroke: #38bdf8 !important;
-    }
-    .mermaid svg .labelText {
-      fill: #ffffff !important;
-    }
-    .mermaid svg .loopText {
-      fill: #f8fafc !important;
-    }
-    .mermaid svg .loopLine {
-      stroke: #38bdf8 !important;
-    }
-
-    /* Modal Fullscreen */
+    /* Modal Fullscreen: Exact same dark background with crystal-clear contrast */
     #zoom-modal.active {
       display: flex !important;
+    }
+    #modal-body {
+      background: #090e1a;
+      width: 100%;
+      height: 100%;
+    }
+    #modal-body svg {
+      background: transparent !important;
+    }
+
+    /* UNIVERSAL MERMAID HIGH-CONTRAST RULES */
+    /* All text inside SVGs: high-visibility white/cyan */
+    .mermaid text, #modal-body text {
+      fill: #ffffff !important;
+      font-size: 14px !important;
+      font-weight: 600 !important;
+      font-family: 'Plus Jakarta Sans', sans-serif !important;
+      stroke: none !important;
+    }
+    /* Actors / Participants boxes */
+    .mermaid rect.actor, #modal-body rect.actor,
+    .mermaid .actor > rect, #modal-body .actor > rect {
+      fill: #1e293b !important;
+      stroke: #38bdf8 !important;
+      stroke-width: 2px !important;
+    }
+    /* Actor lines */
+    .mermaid line.actor-line, #modal-body line.actor-line {
+      stroke: #60a5fa !important;
+      stroke-width: 1.5px !important;
+      stroke-dasharray: 4, 4 !important;
+    }
+    /* Arrow message lines */
+    .mermaid .messageLine0, #modal-body .messageLine0,
+    .mermaid .messageLine1, #modal-body .messageLine1 {
+      stroke: #38bdf8 !important;
+      stroke-width: 2px !important;
+    }
+    /* Arrow heads */
+    .mermaid marker path, #modal-body marker path {
+      fill: #38bdf8 !important;
+      stroke: #38bdf8 !important;
+    }
+    /* Message text above arrows */
+    .mermaid .messageText, #modal-body .messageText {
+      fill: #e0f2fe !important;
+      font-weight: 600 !important;
+      font-size: 13px !important;
+      stroke: none !important;
+    }
+    /* Alt / Opt / Loop boxes */
+    .mermaid rect.labelBox, #modal-body rect.labelBox {
+      fill: #1e293b !important;
+      stroke: #60a5fa !important;
+    }
+    .mermaid .labelText, #modal-body .labelText {
+      fill: #ffffff !important;
+      font-weight: bold !important;
+    }
+    .mermaid .loopLine, #modal-body .loopLine {
+      stroke: #60a5fa !important;
+      stroke-dasharray: 3, 3 !important;
+    }
+    .mermaid .loopText, #modal-body .loopText {
+      fill: #38bdf8 !important;
+      font-weight: 600 !important;
+    }
+    /* Flowchart / C4 boxes */
+    .mermaid .node rect, #modal-body .node rect,
+    .mermaid .node polygon, #modal-body .node polygon {
+      fill: #172033 !important;
+      stroke: #38bdf8 !important;
+      stroke-width: 2px !important;
+    }
+    .mermaid .edgePath path, #modal-body .edgePath path {
+      stroke: #60a5fa !important;
+      stroke-width: 2px !important;
+    }
+    .mermaid .edgeLabel, #modal-body .edgeLabel {
+      color: #ffffff !important;
+      background: #0f172a !important;
     }
 
     /* Scrollbars */
@@ -356,7 +382,7 @@ function generateSpaHtml(): string {
       </div>
     </div>
 
-    <div class="hidden md:flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-400">
+    <div class="hidden md:flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-slate-900 border border-slate-800 text-xs text-slate-300">
       <span class="text-cyan-400 font-bold">✨ Tip:</span> Haz clic en cualquier diagrama para abrirlo en Fullscreen con Pan & Zoom
     </div>
 
@@ -420,13 +446,13 @@ function generateSpaHtml(): string {
     </main>
   </div>
 
-  <!-- Fullscreen Diagram Zoom Modal (ONLY PLACE WITH ACTIVE PAN & ZOOM) -->
+  <!-- Fullscreen Diagram Zoom Modal -->
   <div id="zoom-modal" class="fixed inset-0 z-50 bg-[#070b16]/98 backdrop-blur-2xl hidden flex-col p-6">
     <div class="flex items-center justify-between pb-4 border-b border-slate-800">
       <div class="flex items-center gap-3">
         <span class="w-3 h-3 rounded-full bg-cyan-400 animate-pulse"></span>
         <h3 id="modal-title" class="font-bold text-base text-white tracking-wide">Visor Interactivo en Pantalla Completa</h3>
-        <span class="text-xs text-slate-400 border border-slate-800 rounded-md px-2 py-0.5 ml-2 font-mono">Usa la rueda o arrastra para explorar</span>
+        <span class="text-xs text-slate-400 border border-slate-800 rounded-md px-2.5 py-0.5 ml-2 font-mono">Rueda o arrastra para moverte</span>
       </div>
       <div class="flex items-center gap-2">
         <button onclick="modalZoomIn()" class="px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-semibold border border-slate-700 transition">
@@ -439,12 +465,12 @@ function generateSpaHtml(): string {
           ↺ Centrar
         </button>
         <button onclick="closeModal()" class="px-4 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-500 text-white text-xs font-bold transition ml-2 shadow-lg shadow-rose-600/30">
-          ✕ Cerrar
+          ✕ Cerrar (Esc)
         </button>
       </div>
     </div>
     <div id="modal-body" class="flex-1 w-full h-full overflow-hidden flex items-center justify-center cursor-grab active:cursor-grabbing p-6">
-      <!-- Cloned SVG goes here -->
+      <!-- High contrast SVG will be injected here -->
     </div>
   </div>
 
