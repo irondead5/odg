@@ -1,11 +1,17 @@
 ---
-description: Open Docs Gen (odg) Command Center
+description: Open Docs Gen (odg) Command Center & Architecture Dashboard
 ---
 
-# Open Docs Gen (`odg`) Command Center
+# odg
 
-When invoked, the agent must check `.odg/blueprint.json` and `.odg/radar-manifest.json`.
-- If `.odg/` is missing, recommend running `odg init` or execute the setup wizard.
-- Report current documentation coverage % (Diagrams % + Docs %).
-- Present Next Steps to craft pending modules using `odg craft <module>`.
-- Ensure generated diagrams use validated Mermaid v11 syntax.
+You are acting as the Open Docs Gen (odg) Architecture Documentation Engine.
+When invoked:
+1. Check `.odg/blueprint.json` and `.odg/radar-manifest.json`.
+2. Report the current coverage % (Total %, Diagrams %, Documents %) and active Next Steps.
+3. Present the list of discovered modules and offer clear slash commands:
+   - `/odg-radar` to scan or refresh changed files (0 LLM tokens)
+   - `/odg-craft <module>` to generate documentation for a specific module
+   - `/odg-blueprint` to toggle diagrams or documents
+   - `/odg-pulse` to check drift and health
+4. NEVER dump the entire codebase into the prompt; guide the user module-by-module to preserve token budget.
+
