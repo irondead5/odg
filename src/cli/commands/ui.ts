@@ -153,15 +153,39 @@ function generateSpaHtml(): string {
     window.mermaid = mermaid;
     mermaid.initialize({
       startOnLoad: false,
-      theme: 'neutral',
+      theme: 'base',
       fontFamily: '"Plus Jakarta Sans", sans-serif',
       fontSize: 14,
-      sequence: {
-        useMaxWidth: false,
-        showSequenceNumbers: true,
-        actorFontSize: 14,
-        noteFontSize: 13,
-        messageFontSize: 13
+      themeVariables: {
+        darkMode: true,
+        background: '#090e1a',
+        mainBkg: '#131b2e',
+        nodeBorder: '#38bdf8',
+        lineColor: '#60a5fa',
+        textColor: '#f8fafc',
+        primaryColor: '#172033',
+        primaryTextColor: '#ffffff',
+        primaryBorderColor: '#38bdf8',
+        secondaryColor: '#1e293b',
+        secondaryTextColor: '#ffffff',
+        secondaryBorderColor: '#60a5fa',
+        tertiaryColor: '#0f172a',
+        tertiaryTextColor: '#ffffff',
+        tertiaryBorderColor: '#1e293b',
+        // ERD & Class Colors
+        attributeBackgroundColorOdd: '#131b2e',
+        attributeBackgroundColorEven: '#0f172a',
+        // Sequence Colors
+        actorBkg: '#172033',
+        actorBorder: '#38bdf8',
+        actorTextColor: '#ffffff',
+        actorLineColor: '#60a5fa',
+        signalColor: '#38bdf8',
+        signalTextColor: '#ffffff',
+        labelBoxBkgColor: '#172033',
+        labelBoxBorderColor: '#38bdf8',
+        labelTextColor: '#ffffff',
+        loopTextColor: '#38bdf8'
       }
     });
   </script>
@@ -214,10 +238,21 @@ function generateSpaHtml(): string {
       font-size: 0.95rem !important;
     }
 
-    /* Diagram Card: Preview */
+    /* THE CANONICAL DIAGRAM STYLES (Identical in card preview & in fullscreen) */
+    .odg-diagram-canvas {
+      background-color: #090e1a !important;
+      border-radius: 0.75rem;
+      border: 1px solid #1e293b;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.4);
+    }
+
+    /* Card Preview container */
     .mermaid-card {
       position: relative;
-      background: #0f1629;
+      background: #0d1424;
       border: 1px solid #1e293b;
       border-radius: 1rem;
       margin: 2.2rem 0;
@@ -239,22 +274,19 @@ function generateSpaHtml(): string {
       align-items: center;
       justify-content: space-between;
       padding: 0.85rem 1.25rem;
-      background: #131b2e;
+      background: #111827;
       border-bottom: 1px solid #1e293b;
     }
     .mermaid-card-body {
-      padding: 2.5rem 1.5rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      background: #0d1424;
+      padding: 2rem 1.5rem;
+      min-height: 280px;
+      max-height: 520px;
       overflow: hidden;
-      max-height: 480px;
     }
     .mermaid-card-body svg {
       max-width: 100% !important;
       height: auto !important;
-      max-height: 420px !important;
+      max-height: 460px !important;
       display: block;
       background: transparent !important;
     }
@@ -262,7 +294,7 @@ function generateSpaHtml(): string {
     .mermaid-overlay {
       position: absolute;
       inset: 0;
-      background: rgba(13, 20, 36, 0.65);
+      background: rgba(9, 14, 26, 0.7);
       backdrop-filter: blur(2px);
       display: flex;
       align-items: center;
@@ -272,90 +304,109 @@ function generateSpaHtml(): string {
       pointer-events: none;
     }
 
-    /* Modal Fullscreen: Exact same dark background with crystal-clear contrast */
+    /* Modal Fullscreen: Exact same background, colors and border styling */
     #zoom-modal.active {
       display: flex !important;
     }
     #modal-body {
-      background: #090e1a;
+      background: #090e1a !important;
       width: 100%;
       height: 100%;
+      border-radius: 0.75rem;
+      border: 1px solid #1e293b;
     }
     #modal-body svg {
       background: transparent !important;
     }
 
-    /* UNIVERSAL MERMAID HIGH-CONTRAST RULES */
-    /* All text inside SVGs: high-visibility white/cyan */
-    .mermaid text, #modal-body text {
+    /* GLOBAL COLOR HARMONIZATION FOR ALL DIAGRAM TYPES (Flowchart, C4, Sequence, ERD) */
+    svg.mermaid text,
+    .mermaid-card-body svg text,
+    #modal-body svg text {
       fill: #ffffff !important;
       font-size: 14px !important;
       font-weight: 600 !important;
       font-family: 'Plus Jakarta Sans', sans-serif !important;
       stroke: none !important;
     }
-    /* Actors / Participants boxes */
-    .mermaid rect.actor, #modal-body rect.actor,
-    .mermaid .actor > rect, #modal-body .actor > rect {
-      fill: #1e293b !important;
+
+    /* Nodes & Boxes across all diagrams */
+    svg.mermaid .node rect,
+    svg.mermaid .node circle,
+    svg.mermaid .node polygon,
+    #modal-body svg .node rect,
+    #modal-body svg .node circle,
+    #modal-body svg .node polygon,
+    svg.mermaid rect.actor,
+    #modal-body rect.actor,
+    svg.mermaid .actor > rect,
+    #modal-body .actor > rect,
+    svg.mermaid .er.entityBox,
+    #modal-body .er.entityBox {
+      fill: #131b2e !important;
       stroke: #38bdf8 !important;
       stroke-width: 2px !important;
     }
-    /* Actor lines */
-    .mermaid line.actor-line, #modal-body line.actor-line {
+
+    /* Flowchart / Sequence / ERD Connecting Lines */
+    svg.mermaid .edgePath path,
+    #modal-body svg .edgePath path,
+    svg.mermaid .messageLine0,
+    #modal-body .messageLine0,
+    svg.mermaid .messageLine1,
+    #modal-body .messageLine1,
+    svg.mermaid line.actor-line,
+    #modal-body line.actor-line,
+    svg.mermaid .er.relationshipLine,
+    #modal-body .er.relationshipLine {
+      stroke: #38bdf8 !important;
+      stroke-width: 2px !important;
+    }
+
+    /* Arrow Markers */
+    svg.mermaid marker path,
+    #modal-body svg marker path {
+      fill: #38bdf8 !important;
+      stroke: #38bdf8 !important;
+    }
+
+    /* Text on Sequence Messages and Flowchart Edge Labels */
+    svg.mermaid .messageText,
+    #modal-body .messageText,
+    svg.mermaid .edgeLabel,
+    #modal-body .edgeLabel,
+    svg.mermaid .labelText,
+    #modal-body .labelText {
+      fill: #f1f5f9 !important;
+      color: #f1f5f9 !important;
+      background: transparent !important;
+      font-weight: 600 !important;
+    }
+
+    /* Alt / Loop boxes in Sequence Diagrams */
+    svg.mermaid rect.labelBox,
+    #modal-body rect.labelBox {
+      fill: #131b2e !important;
       stroke: #60a5fa !important;
-      stroke-width: 1.5px !important;
+    }
+    svg.mermaid .loopLine,
+    #modal-body .loopLine {
+      stroke: #60a5fa !important;
       stroke-dasharray: 4, 4 !important;
     }
-    /* Arrow message lines */
-    .mermaid .messageLine0, #modal-body .messageLine0,
-    .mermaid .messageLine1, #modal-body .messageLine1 {
-      stroke: #38bdf8 !important;
-      stroke-width: 2px !important;
-    }
-    /* Arrow heads */
-    .mermaid marker path, #modal-body marker path {
+    svg.mermaid .loopText,
+    #modal-body .loopText {
       fill: #38bdf8 !important;
-      stroke: #38bdf8 !important;
     }
-    /* Message text above arrows */
-    .mermaid .messageText, #modal-body .messageText {
-      fill: #e0f2fe !important;
-      font-weight: 600 !important;
-      font-size: 13px !important;
-      stroke: none !important;
+
+    /* ERD Specific Tables */
+    svg.mermaid .er.attributeBoxOdd,
+    #modal-body .er.attributeBoxOdd {
+      fill: #131b2e !important;
     }
-    /* Alt / Opt / Loop boxes */
-    .mermaid rect.labelBox, #modal-body rect.labelBox {
-      fill: #1e293b !important;
-      stroke: #60a5fa !important;
-    }
-    .mermaid .labelText, #modal-body .labelText {
-      fill: #ffffff !important;
-      font-weight: bold !important;
-    }
-    .mermaid .loopLine, #modal-body .loopLine {
-      stroke: #60a5fa !important;
-      stroke-dasharray: 3, 3 !important;
-    }
-    .mermaid .loopText, #modal-body .loopText {
-      fill: #38bdf8 !important;
-      font-weight: 600 !important;
-    }
-    /* Flowchart / C4 boxes */
-    .mermaid .node rect, #modal-body .node rect,
-    .mermaid .node polygon, #modal-body .node polygon {
-      fill: #172033 !important;
-      stroke: #38bdf8 !important;
-      stroke-width: 2px !important;
-    }
-    .mermaid .edgePath path, #modal-body .edgePath path {
-      stroke: #60a5fa !important;
-      stroke-width: 2px !important;
-    }
-    .mermaid .edgeLabel, #modal-body .edgeLabel {
-      color: #ffffff !important;
-      background: #0f172a !important;
+    svg.mermaid .er.attributeBoxEven,
+    #modal-body .er.attributeBoxEven {
+      fill: #0c1220 !important;
     }
 
     /* Scrollbars */
@@ -470,7 +521,7 @@ function generateSpaHtml(): string {
       </div>
     </div>
     <div id="modal-body" class="flex-1 w-full h-full overflow-hidden flex items-center justify-center cursor-grab active:cursor-grabbing p-6">
-      <!-- High contrast SVG will be injected here -->
+      <!-- Cloned SVG goes here -->
     </div>
   </div>
 
@@ -585,7 +636,7 @@ function generateSpaHtml(): string {
                     <span>⛶ Clic para Pantalla Completa</span>
                   </div>
                 </div>
-                <div class="mermaid-card-body" id="body-\${diagId}">
+                <div class="mermaid-card-body odg-diagram-canvas" id="body-\${diagId}">
                   <pre class="mermaid" id="\${diagId}">\${text}</pre>
                 </div>
                 <div class="mermaid-overlay">
