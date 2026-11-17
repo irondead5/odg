@@ -1,0 +1,5 @@
+node_modules/
+dist/
+.odg/cache/
+.DS_Store
+*.log

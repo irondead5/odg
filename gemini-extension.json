@@ -1,0 +1,4 @@
+{
+  "name": "open-docs-gen",
+  "description": "Zero-thought software architecture documentation framework (AST + DuckDB RAG + Mermaid + Vue 3)"
+}

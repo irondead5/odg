@@ -1,0 +1,56 @@
+{
+  "name": "open-docs-gen",
+  "version": "0.1.0",
+  "description": "Zero-thought software architecture documentation & diagram coverage framework (AST + DuckDB RAG + Mermaid + Vue 3)",
+  "license": "MIT",
+  "type": "module",
+  "bin": {
+    "odg": "./bin/odg.mjs",
+    "open-docs-gen": "./bin/odg.mjs"
+  },
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs",
+      "require": "./dist/index.cjs"
+    },
+    "./catalog": {
+      "types": "./dist/catalog.d.ts",
+      "import": "./dist/catalog.mjs"
+    },
+    "./integrations": {
+      "types": "./dist/integrations.d.ts",
+      "import": "./dist/integrations.mjs"
+    }
+  },
+  "files": [
+    "bin",
+    "dist",
+    "plugin.json",
+    "gemini-extension.json",
+    ".claude-plugin",
+    ".antigravity-plugin"
+  ],
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@clack/prompts": "^0.9.1",
+    "citty": "^0.1.6",
+    "picocolors": "^1.1.1",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.9",
+    "tsup": "^8.4.0",
+    "typescript": "^5.8.2"
+  },
+  "engines": {
+    "node": ">=20.0.0"
+  }
+}
