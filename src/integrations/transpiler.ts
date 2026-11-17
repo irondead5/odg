@@ -43,7 +43,7 @@ When invoked with or without arguments:
   {
     name: 'odg-craft',
     filename: 'odg-craft',
-    description: 'Deep synthesize architecture documentation and Mermaid diagrams for a specific module',
+    description: 'Deep synthesize architecture documentation and Mermaid diagrams for a specific module (e.g. /odg-craft user)',
     prompt: `You are executing Phase 2 Deep Module Documentation (/odg-craft) of Open Docs Gen.
 USAGE: /odg-craft <module-name> (e.g., /odg-craft user, /odg-craft nutrition)
 
@@ -124,15 +124,24 @@ export async function installToolIntegrations(
       const content = formatCommandForAdapter(adapter, cmd);
       await fs.writeFile(cmdFilePath, content, 'utf-8');
       installedPaths.push(cmdFilePath);
-    }
 
-    // Generate Skill if tool supports it
-    if (adapter.skillsDir) {
-      const fullSkillDir = path.join(rootDir, adapter.skillsDir);
-      await fs.mkdir(fullSkillDir, { recursive: true });
-      const skillPath = path.join(fullSkillDir, 'SKILL.md');
-      await fs.writeFile(skillPath, generateSkillContent(), 'utf-8');
-      installedPaths.push(skillPath);
+      // In Antigravity, slash commands are also populated from .agents/skills/<cmd>/SKILL.md
+      if (toolId === 'agy') {
+        const skillDir = path.join(rootDir, '.agents/skills', cmd.filename);
+        await fs.mkdir(skillDir, { recursive: true });
+        const skillFilePath = path.join(skillDir, 'SKILL.md');
+        const skillContent = `---
+name: ${cmd.filename}
+description: ${cmd.description}
+---
+
+# ${cmd.name}
+
+${cmd.prompt}
+`;
+        await fs.writeFile(skillFilePath, skillContent, 'utf-8');
+        installedPaths.push(skillFilePath);
+      }
     }
   }
 
@@ -158,25 +167,5 @@ description: ${cmd.description}
 # ${cmd.name}
 
 ${cmd.prompt}
-`;
-}
-
-function generateSkillContent(): string {
-  return `---
-name: odg
-description: Expert software architecture documentation generator powered by Open Docs Gen (odg)
----
-
-# ODG Architecture Documentation Skill
-
-Use this skill when analyzing, generating, or syncing architecture specifications, diagrams (ERD, C4, Sequence), and technical SOWs with \`odg\`.
-Available slash commands:
-- \`/odg\`: Command Center & overview
-- \`/odg-radar\`: Discover modules & token budgets (0 tokens)
-- \`/odg-craft <module>\`: Deeply document a specific module
-- \`/odg-blueprint\`: Configure diagrams and documents
-- \`/odg-pulse\`: Check coverage % and drift
-- \`/odg-sweep\`: Reconcile cross-document references & backlinks
-Always respect the active \`.odg/blueprint.json\` configuration.
 `;
 }
