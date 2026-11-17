@@ -3,6 +3,7 @@ import { initCommand } from './commands/init.js';
 import { blueprintCommand } from './commands/blueprint.js';
 import { pulseCommand } from './commands/pulse.js';
 import { updateCommand } from './commands/update.js';
+import { uiCommand } from './commands/ui.js';
 
 export const mainCommand = defineCommand({
   meta: {
@@ -14,6 +15,7 @@ export const mainCommand = defineCommand({
     init: initCommand,
     blueprint: blueprintCommand,
     pulse: pulseCommand,
-    update: updateCommand
+    update: updateCommand,
+    ui: uiCommand
   }
 });
