@@ -21,10 +21,12 @@ You can install `odg` globally on your machine or locally inside your project.
 Installing globally allows you to run `odg` from any terminal and any repository on your machine:
 
 ```bash
-# Using npm
-npm install -g open-docs-gen
+# Directly from GitHub (always latest)
+npm install -g git+https://github.com/irondead5/odg.git
 
-# Or using pnpm
+# Or from npm registry (once published)
+npm install -g open-docs-gen
+# or using pnpm:
 pnpm add -g open-docs-gen
 ```
 

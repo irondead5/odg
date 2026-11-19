@@ -34,8 +34,12 @@ Combining **0-token deterministic AST discovery** with targeted LLM synthesis an
 
 ### 1. Install Globally
 ```bash
+# Directly from GitHub (recommended)
+npm install -g git+https://github.com/irondead5/odg.git
+
+# Or from npm registry (once published)
 npm install -g open-docs-gen
-# or using pnpm:
+# or with pnpm:
 pnpm add -g open-docs-gen
 ```
 
