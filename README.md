@@ -64,7 +64,7 @@ Open **`http://localhost:4321`** in your browser to view your complete living ar
 ## 🏛️ How It Works: The 2-Pillar System
 
 ```mermaid
-graph LR
+flowchart LR
     subgraph S1 ["Pillar 1: Visual Diagrams (Mermaid.js)"]
         ERD["ERD & Schemas"]
         C4["C4 Context & Component"]
@@ -81,7 +81,7 @@ graph LR
         OPS["06-ops / Env Runbook"]
     end
 
-    S1 <-->|Traceability Matrix (odg sweep)| S2
+    S1 <-->|"Traceability Matrix (odg sweep)"| S2
     style S1 fill:#090e1a,stroke:#38bdf8,stroke-width:2px,color:#fff
     style S2 fill:#090e1a,stroke:#60a5fa,stroke-width:2px,color:#fff
 ```

@@ -3,7 +3,7 @@
 Open Docs Gen (`odg`) organizes software architecture into two complementary, synchronized pillars: **Visual Diagrams (Mermaid.js)** and **Written Documentation Specifications (Markdown)**.
 
 ```mermaid
-graph TD
+flowchart TD
     subgraph S1 ["Pillar 1: Visual Diagrams (Mermaid.js)"]
         ERD["Entity-Relationship (ERD)"]
         UC["Use Case Flows"]
@@ -27,7 +27,7 @@ graph TD
         SEC["09-security / Security Matrix"]
     end
 
-    S1 <-->|Traceability Matrix| S2
+    S1 <-->|"Traceability Matrix"| S2
     style S1 fill:#090e1a,stroke:#38bdf8,stroke-width:2px,color:#fff
     style S2 fill:#090e1a,stroke:#60a5fa,stroke-width:2px,color:#fff
 ```
