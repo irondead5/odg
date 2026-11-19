@@ -1,6 +1,6 @@
 {
   "name": "open-docs-gen",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Zero-thought software architecture documentation & diagram coverage framework (AST + DuckDB RAG + Mermaid + Vue 3)",
   "license": "MIT",
   "author": "Miguel Angel Morales Arteaga",
