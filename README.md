@@ -162,7 +162,6 @@ Launch the portal anytime with `odg ui` to enjoy:
 | 🤖 [AI Integrations](docs/ai-integrations.md) | Slash commands setup for Antigravity, Claude, and Copilot |
 | 🌐 [Living Portal Guide](docs/portal-guide.md) | Web UI features, pan & zoom visor, and contrast guarantees |
 | 🗑️ [Uninstallation Guide](UNINSTALL.md) | Instructions to cleanly remove CLI and project artifacts |
-| 📋 [Architectural Blueprint](PLANNING.md) | Internal technical specification and token optimizations |
 
 ---
 
