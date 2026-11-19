@@ -4,10 +4,18 @@
   "description": "Zero-thought software architecture documentation & diagram coverage framework (AST + DuckDB RAG + Mermaid + Vue 3)",
   "license": "MIT",
   "author": "Miguel Angel Morales Arteaga",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/irondead5/odg.git"
+  },
+  "bugs": {
+    "url": "https://github.com/irondead5/odg/issues"
+  },
+  "homepage": "https://github.com/irondead5/odg#readme",
   "type": "module",
   "bin": {
-    "odg": "./bin/odg.mjs",
-    "open-docs-gen": "./bin/odg.mjs"
+    "odg": "bin/odg.mjs",
+    "open-docs-gen": "bin/odg.mjs"
   },
   "main": "./dist/index.cjs",
   "module": "./dist/index.mjs",
