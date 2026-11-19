@@ -1,4 +1,5 @@
 import { defineCommand } from 'citty';
+import pkg from '../../package.json' with { type: 'json' };
 import { initCommand } from './commands/init.js';
 import { blueprintCommand } from './commands/blueprint.js';
 import { pulseCommand } from './commands/pulse.js';
@@ -11,7 +12,7 @@ import { sweepCommand } from './commands/sweep.js';
 export const mainCommand = defineCommand({
   meta: {
     name: 'odg',
-    version: '0.1.0',
+    version: pkg.version,
     description: 'Open Docs Gen (odg) — Zero-thought Architecture Documentation Framework'
   },
   subCommands: {
